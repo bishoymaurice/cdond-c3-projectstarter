@@ -11,11 +11,11 @@ commands:
           when: on_fail
           command: |
             # Delete files uploaded to S3
-            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --recursive
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --recursive || echo "Bucket not found"
             # Remove backend stack
-            aws cloudformation delete-stack --stack-name UDA-PEOPLE-BACKEND-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name UDA-PEOPLE-BACKEND-${CIRCLE_WORKFLOW_ID:0:7} || echo "Not found"
             # Remove frontend stack
-            aws cloudformation delete-stack --stack-name UDA-PEOPLE-FRONTEND-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name UDA-PEOPLE-FRONTEND-${CIRCLE_WORKFLOW_ID:0:7} || echo "Not found"
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
