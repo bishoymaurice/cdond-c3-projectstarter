@@ -2,26 +2,6 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.1
 commands:
-  slack-notify:
-    description: Send slack notification in case of failure
-    steps:
-      - slack/notify:
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
-                      "text": "*This is a text notification*",
-                      "emoji": true
-                    }
-                  ]
-                }
-              ]
-            }
-          event: always
 
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -68,6 +48,13 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
   build-backend:
     docker:
@@ -85,6 +72,13 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
   test-frontend:
     docker:
@@ -102,6 +96,13 @@ jobs:
             export PATH=$PATH:/home/circleci/project/frontend/node_modules/.bin
             echo $PATH
             npm test || echo "Pass Simulation"
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   test-backend:
     docker:
@@ -119,7 +120,13 @@ jobs:
             export PATH=$PATH:/home/circleci/project/backend/node_modules/.bin
             echo $PATH
             npm test || echo "Pass Simulation"
-      - slack-notify
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   scan-frontend:
     docker:
@@ -133,6 +140,13 @@ jobs:
           command: |
             cd ./frontend
             npm audit --audit-level=critical || echo "Pass Simulation"
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   scan-backend:
     docker:
@@ -146,6 +160,13 @@ jobs:
           command: |
             cd ./backend
             npm audit --audit-level=critical || echo "Pass Simulation"
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   deploy-infrastructure:
     docker:
@@ -205,6 +226,10 @@ jobs:
                 fi
                 sleep 2;
               done
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   configure-infrastructure:
     docker:
@@ -219,6 +244,10 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook -i inventory.txt configure-server.yml
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   run-migrations:
     docker:
@@ -237,6 +266,10 @@ jobs:
             else
               curl -H "Content-Type: text/plain" -H "token: 4451b76e-6c0c-4282-8c72-1e80ae2306db" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   deploy-frontend:
     docker:
@@ -268,6 +301,10 @@ jobs:
             npm run build
             cd dist
             aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID}/
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   deploy-backend:
     docker:
@@ -282,6 +319,10 @@ jobs:
           name: Deploy backend
           command: |
             ansible-playbook -i inventory.txt deploy-backend.yml
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   smoke-test:
     docker:
@@ -323,6 +364,10 @@ jobs:
             then
               return 1;
             fi
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   cloudfront-update:
     docker:
@@ -337,6 +382,10 @@ jobs:
             --tags UdaPeople=UdaPeopleFrontend \
             --stack-name UDA_PEOPLE_FRONTEND_$CIRCLE_WORKFLOW_ID \
             --parameter-overrides WorkflowID=$CIRCLE_WORKFLOW_ID
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
 
   cleanup:
     docker:
@@ -358,6 +407,13 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
             fi
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@EngineeringTeam"
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
 workflows:
   default:
