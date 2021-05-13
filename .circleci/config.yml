@@ -209,12 +209,7 @@ jobs:
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=UdaPeopleBackend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --region=us-west-2 \
-              --output text
-            aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=UdaPeopleBackend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --region=us-west-2 \
               --output text >> .circleci/ansible/inventory.txt
             
@@ -224,33 +219,6 @@ jobs:
           root: .
           paths:
             - .circleci/ansible/inventory.txt
-      - run:
-          name: Check if stacks are ready
-          command: |
-            more .circleci/ansible/inventory.txt
-            # Backend
-            while true
-              do
-                aws cloudformation describe-stacks --stack-name UDA-PEOPLE-BACKEND-${CIRCLE_WORKFLOW_ID:0:7} > temp_log.txt
-                if grep -q "CREATE_FAILED" temp_log.txt; then
-                  return 1;
-                elif grep -q "CREATE_COMPLETE" temp_log.txt; then
-                  break;
-                fi
-                sleep 2;
-              done
-          
-            # Frontend
-            while true
-              do
-                aws cloudformation describe-stacks --stack-name UDA-PEOPLE-FRONTEND-${CIRCLE_WORKFLOW_ID:0:7} > temp_log.txt
-                if grep -q "CREATE_FAILED" temp_log.txt; then
-                  return 1;
-                elif grep -q "CREATE_COMPLETE" temp_log.txt; then
-                  break;
-                fi
-                sleep 2;
-              done
       - slack/notify:
           event: fail
           template: basic_fail_1
