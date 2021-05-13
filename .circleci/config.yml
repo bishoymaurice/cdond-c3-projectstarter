@@ -4,8 +4,13 @@ orbs:
 commands:
   slack-notify:
     description: Send slack notification in case of failure
+    parameters:
+      - msg:
+          type: string
+          default: 'Hello from Slack!'
     steps:
       - slack/notify:
+          when: on_fail
           custom: |
             {
               "blocks": [
@@ -14,7 +19,8 @@ commands:
                   "fields": [
                     {
                       "type": "plain_text",
-                      "text": "*This is a text notification*",
+                      "text": "<< parameters.msg >>",
+                      "color": "#F46546",
                       "emoji": true
                     }
                   ]
