@@ -3,6 +3,7 @@ version: "3"
 services:
   database:
     image: "postgres"
+    container_name: udapeople_postgres_ins1
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
