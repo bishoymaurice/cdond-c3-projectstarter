@@ -174,14 +174,14 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: ubuntu
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
             apt update
-            apt install -y gzip tar
+            apt install -y awscli
       - run:
           name: Ensure back-end infrastructure exists
           command: |
