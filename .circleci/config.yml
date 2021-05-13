@@ -212,7 +212,7 @@ jobs:
               --region=us-west-2 \
               --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
             - .circleci/ansible/inventory.txt
       - run:
@@ -261,11 +261,11 @@ jobs:
             unzip awscliv2.zip
             ./aws/install
             pwd
-            ls -ltr
+            ls -ltra
       - add_ssh_keys:
           fingerprints: ["a9:8c:1f:02:e9:99:be:1a:dd:d0:65:d3:ec:50:ff:21"]
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Configure server
           command: |
