@@ -13,9 +13,9 @@ commands:
             # Delete files uploaded to S3
             aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --recursive
             # Remove backend stack
-            aws cloudformation delete-stack --stack-name UDA_PEOPLE_BACKEND_$CIRCLE_WORKFLOW_ID
+            aws cloudformation delete-stack --stack-name UDA_PEOPLE_BACKEND_${CIRCLE_WORKFLOW_ID:0:7}
             # Remove frontend stack
-            aws cloudformation delete-stack --stack-name UDA_PEOPLE_FRONTEND_$CIRCLE_WORKFLOW_ID
+            aws cloudformation delete-stack --stack-name UDA_PEOPLE_FRONTEND_${CIRCLE_WORKFLOW_ID:0:7}
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -179,22 +179,22 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags UdaPeople=UdaPeopleBackend \
-              --stack-name UDA_PEOPLE_BACKEND_$CIRCLE_WORKFLOW_ID \
-              --parameter-overrides ID=$CIRCLE_WORKFLOW_ID
+              --stack-name UDA_PEOPLE_BACKEND_${CIRCLE_WORKFLOW_ID:0:7} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags UdaPeople=UdaPeopleFrontend \
-              --stack-name UDA_PEOPLE_FRONTEND_$CIRCLE_WORKFLOW_ID \
-              --parameter-overrides ID=$CIRCLE_WORKFLOW_ID
+              --stack-name UDA_PEOPLE_FRONTEND_${CIRCLE_WORKFLOW_ID:0:7} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=backend-$CIRCLE_WORKFLOW_ID" \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
@@ -206,7 +206,7 @@ jobs:
             # Backend
             while true
               do
-                aws cloudformation describe-stacks --stack-name UDA_PEOPLE_BACKEND_$CIRCLE_WORKFLOW_ID > temp_log.txt
+                aws cloudformation describe-stacks --stack-name UDA_PEOPLE_BACKEND_${CIRCLE_WORKFLOW_ID:0:7} > temp_log.txt
                 if grep -q "CREATE_FAILED" temp_log.txt; then
                   return 1;
                 elif grep -q "CREATE_COMPLETE" temp_log.txt; then
@@ -218,7 +218,7 @@ jobs:
             # Frontend
             while true
               do
-                aws cloudformation describe-stacks --stack-name UDA_PEOPLE_FRONTEND_$CIRCLE_WORKFLOW_ID > temp_log.txt
+                aws cloudformation describe-stacks --stack-name UDA_PEOPLE_FRONTEND_${CIRCLE_WORKFLOW_ID:0:7} > temp_log.txt
                 if grep -q "CREATE_FAILED" temp_log.txt; then
                   return 1;
                 elif grep -q "CREATE_COMPLETE" temp_log.txt; then
@@ -380,8 +380,8 @@ jobs:
             aws cloudformation update-stack \
             --template-file .circleci/files/cloudfront.yml \
             --tags UdaPeople=UdaPeopleFrontend \
-            --stack-name UDA_PEOPLE_FRONTEND_$CIRCLE_WORKFLOW_ID \
-            --parameter-overrides WorkflowID=$CIRCLE_WORKFLOW_ID
+            --stack-name UDA_PEOPLE_FRONTEND_${CIRCLE_WORKFLOW_ID:0:7} \
+            --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:
           event: fail
           template: basic_fail_1
