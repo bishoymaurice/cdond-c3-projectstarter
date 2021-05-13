@@ -192,7 +192,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags UdaPeople=UdaPeopleBackend \
+              --tags UdaPeople=UdaPeopleBackend-${CIRCLE_WORKFLOW_ID:0:7} \
               --stack-name UDA-PEOPLE-BACKEND-${CIRCLE_WORKFLOW_ID:0:7} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
@@ -208,10 +208,10 @@ jobs:
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:Name,Values=UdaPeopleBackend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: /root/project
+          root: ~/
           paths:
             - .circleci/ansible/inventory.txt
       - run:
@@ -250,6 +250,16 @@ jobs:
       - image: williamyeh/ansible:1.9-ubuntu14.04
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apt update -y
+            apt install zip gzip tar curl -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+            pwd
+            ls -ltr
       - add_ssh_keys:
           fingerprints: ["a9:8c:1f:02:e9:99:be:1a:dd:d0:65:d3:ec:50:ff:21"]
       - attach_workspace:
