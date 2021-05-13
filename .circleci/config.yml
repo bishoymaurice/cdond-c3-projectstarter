@@ -265,6 +265,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
+      - destroy-environment:
+          when: on_fail
 
   run-migrations:
     docker:
