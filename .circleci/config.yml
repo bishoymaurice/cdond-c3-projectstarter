@@ -247,7 +247,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: ansible/ansible:ubuntu1404
+      - image: williamyeh/ansible:1.9-ubuntu14.04
     steps:
       - checkout
       - add_ssh_keys:
@@ -287,14 +287,20 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: ubuntu
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
             apt update -y
-            apy upgrade
+            apt upgrade
+            apt install zip gzip tar curl -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+            pwd
+            ls -ltr
             apt install nodejs -y
             apt install npm -y
             nodejs -v
@@ -322,7 +328,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: ansible/ansible:ubuntu1404
+      - image: williamyeh/ansible:1.9-ubuntu14.04
     steps:
       - checkout
       - add_ssh_keys:
