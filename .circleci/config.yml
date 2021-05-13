@@ -253,7 +253,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a9:8c:1f:02:e9:99:be:1a:dd:d0:65:d3:ec:50:ff:21"]
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Configure server
           command: |
@@ -265,8 +265,7 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
-      - destroy-environment:
-          when: on_fail
+      - destroy-environment
 
   run-migrations:
     docker:
