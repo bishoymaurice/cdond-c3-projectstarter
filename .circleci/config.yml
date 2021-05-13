@@ -102,6 +102,9 @@ jobs:
             export PATH=$PATH:/home/circleci/project/frontend/node_modules/.bin
             echo $PATH
             npm test || echo "Pass Simulation"
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
 
   test-backend:
     docker:
@@ -119,6 +122,9 @@ jobs:
             export PATH=$PATH:/home/circleci/project/backend/node_modules/.bin
             echo $PATH
             npm test || echo "Pass Simulation"
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
       - slack-notify
 
   scan-frontend:
@@ -133,6 +139,9 @@ jobs:
           command: |
             cd ./frontend
             npm audit --audit-level=critical || echo "Pass Simulation"
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
 
   scan-backend:
     docker:
@@ -146,6 +155,9 @@ jobs:
           command: |
             cd ./backend
             npm audit --audit-level=critical || echo "Pass Simulation"
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
 
   deploy-infrastructure:
     docker:
