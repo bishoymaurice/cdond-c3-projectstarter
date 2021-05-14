@@ -201,7 +201,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags UdaPeople=UdaPeopleFrontend \
+              --tags UdaPeople=UdaPeopleFrontend-${CIRCLE_WORKFLOW_ID:0:7} \
               --stack-name UDA-PEOPLE-FRONTEND-${CIRCLE_WORKFLOW_ID:0:7} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:

@@ -1,3 +1,4 @@
+---
 - name: "update apt packages."
   become: yes
   apt:
@@ -28,17 +29,17 @@
     production: yes
     state: present
 
-- name: Set environment variables
-  environment:
-    PATH: "$JAVA_HOME/bin:{{ ansible_env.PATH }}"
-    ENVIRONMENT: production
-    TYPEORM_CONNECTION: postgres
-    TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
-    TYPEORM_HOST: database-1.cbvz1xaekbmr.us-east-2.rds.amazonaws.com
-    TYPEORM_PORT: 5432
-    TYPEORM_USERNAME: postgres
-    TYPEORM_PASSWORD: postgres
-    TYPEORM_DATABASE: database-1
+# - name: Set environment variables
+#   environment:
+#     PATH: "$JAVA_HOME/bin:{{ ansible_env.PATH }}"
+#     ENVIRONMENT: production
+#     TYPEORM_CONNECTION: postgres
+#     TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
+#     TYPEORM_HOST: database-1.cbvz1xaekbmr.us-east-2.rds.amazonaws.com
+#     TYPEORM_PORT: 5432
+#     TYPEORM_USERNAME: postgres
+#     TYPEORM_PASSWORD: postgres
+#     TYPEORM_DATABASE: database-1
 
 - name: Creates directory
   file:
