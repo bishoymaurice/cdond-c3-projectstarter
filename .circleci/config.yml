@@ -216,7 +216,7 @@ jobs:
             cat .circleci/ansible/inventory.txt
 
       - persist_to_workspace:
-          root: /root
+          root: ~/
           paths:
             - .circleci/ansible/inventory.txt
       - slack/notify:
@@ -227,14 +227,15 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: williamyeh/ansible:1.9-ubuntu14.04
+      - image: ubuntu
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
+            apt-add-repository ppa:ansible/ansible
             apt update -y
-            apt install zip gzip tar curl -y
+            apt install zip gzip tar curl ansible -y
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install
@@ -243,7 +244,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a9:8c:1f:02:e9:99:be:1a:dd:d0:65:d3:ec:50:ff:21"]
       - attach_workspace:
-          at: /root/.circleci/ansible/inventory.txt
+          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Configure server
           command: |
@@ -301,7 +302,7 @@ jobs:
             nodejs -v
             npm -v
       - attach_workspace:
-          at: /workspace/.circleci/ansible/inventory.txt
+          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Get backend url
           command: |
@@ -329,7 +330,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a9:8c:1f:02:e9:99:be:1a:dd:d0:65:d3:ec:50:ff:21"]
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Deploy backend
           command: |
@@ -349,7 +350,7 @@ jobs:
           command: |
             apk add curl
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: ~/.circleci/ansible/inventory.txt
       - run:
           name: Get backend url
           command: |
