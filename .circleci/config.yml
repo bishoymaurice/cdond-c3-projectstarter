@@ -243,14 +243,15 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a9:8c:1f:02:e9:99:be:1a:dd:d0:65:d3:ec:50:ff:21"]
       - attach_workspace:
-          at: ~/
+          at: /tmp
       - run:
           name: Configure server
           command: |
             pwd
-            ls -ltr
-            more .circleci/ansible/inventory.txt
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
+            ls -ltra
+            ls -ltra /tmp
+            more /tmp/.circleci/ansible/inventory.txt
+            ansible-playbook -i /tmp/.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       - slack/notify:
           event: fail
           template: basic_fail_1
