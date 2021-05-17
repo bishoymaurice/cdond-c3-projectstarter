@@ -270,6 +270,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
@@ -297,6 +299,8 @@ jobs:
       - image: ubuntu
     steps:
       - checkout
+      - restore_cache:
+          keys: [frontend-build]
       - run:
           name: Install dependencies
           command: |
@@ -325,7 +329,6 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            npm run build
             cd dist
             aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID}/
       - slack/notify:
