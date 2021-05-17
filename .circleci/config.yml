@@ -291,7 +291,7 @@ jobs:
           template: basic_fail_1
           mentions: "@EngineeringTeam"
       - revert-migrations
-      # - destroy-environment
+      - destroy-environment
 
   deploy-frontend:
     docker:
@@ -333,8 +333,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
-      # - revert-migrations
-      # - destroy-environment
+      - revert-migrations
+      - destroy-environment
 
   deploy-backend:
     docker:
@@ -353,8 +353,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
-      # - revert-migrations
-      # - destroy-environment
+      - revert-migrations
+      - destroy-environment
 
   smoke-test:
     docker:
@@ -400,8 +400,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
-      # - revert-migrations
-      # - destroy-environment
+      - revert-migrations
+      - destroy-environment
 
   cloudfront-update:
     docker:
@@ -420,8 +420,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
-      # - revert-migrations
-      # - destroy-environment
+      - revert-migrations
+      - destroy-environment
 
   cleanup:
     docker:
