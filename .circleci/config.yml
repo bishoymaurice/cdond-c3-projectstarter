@@ -272,6 +272,11 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            pwd
+            ls -ltra
+            cd project
+            pwd
+            ls -ltra
             npm run migrations 2>&1 | tee migrations_log.txt
       - run:
           name: Send migration results to memstash
@@ -286,6 +291,7 @@ jobs:
           template: basic_fail_1
           mentions: "@EngineeringTeam"
       - revert-migrations
+      # - destroy-environment
 
   deploy-frontend:
     docker:
@@ -327,6 +333,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
+      # - revert-migrations
+      # - destroy-environment
 
   deploy-backend:
     docker:
@@ -345,6 +353,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
+      # - revert-migrations
+      # - destroy-environment
 
   smoke-test:
     docker:
@@ -390,6 +400,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
+      # - revert-migrations
+      # - destroy-environment
 
   cloudfront-update:
     docker:
@@ -408,6 +420,8 @@ jobs:
           event: fail
           template: basic_fail_1
           mentions: "@EngineeringTeam"
+      # - revert-migrations
+      # - destroy-environment
 
   cleanup:
     docker:
