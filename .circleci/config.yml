@@ -317,11 +317,11 @@ jobs:
             nodejs -v
             npm -v
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: /tmp
       - run:
           name: Get backend url
           command: |
-            sed -n '2p' .circleci/ansible/inventory.txt > .circleci/ansible/backendip.txt
+            sed -n '2p' /tmp/.circleci/ansible/inventory.txt > .circleci/ansible/backendip.txt
             export BACKEND_IP=$(cat .circleci/ansible/backendip.txt)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
@@ -340,17 +340,32 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: williamyeh/ansible:1.9-ubuntu14.04
+      - image: ubuntu
     steps:
       - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: Install dependencies
+          command: |
+            apt update
+            export DEBIAN_FRONTEND=noninteractive
+            apt install software-properties-common -y
+            apt-add-repository ppa:ansible/ansible -y
+            apt update -y
+            apt install zip gzip tar curl ansible -y
+            pwd
+            ls -ltra
+            sed -i 's/^\[defaults\]/\[defaults\]\nhost_key_checking = False/g' /etc/ansible/ansible.cfg
+            tail /etc/ansible/ansible.cfg
       - add_ssh_keys:
           fingerprints: ["a9:8c:1f:02:e9:99:be:1a:dd:d0:65:d3:ec:50:ff:21"]
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: /tmp
       - run:
           name: Deploy backend
           command: |
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -i /tmp/.circleci/ansible/inventory.txt deploy-backend.yml
       - slack/notify:
           event: fail
           template: basic_fail_1
