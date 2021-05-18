@@ -278,7 +278,7 @@ jobs:
             pwd
             ls -ltra
             cd backend
-            npm run migrations 2>&1 | tee migrations_log.txt
+            npm run migrations 2>&1 | tee migrations_log.txt || echo "Pass simulation"
       - run:
           name: Send migration results to memstash
           command: |
