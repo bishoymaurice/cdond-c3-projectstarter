@@ -304,18 +304,17 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apt update
+            export DEBIAN_FRONTEND=noninteractive
+            apt install software-properties-common -y
+            apt-add-repository ppa:ansible/ansible -y
             apt update -y
-            apt upgrade
             apt install zip gzip tar curl -y
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install
             pwd
-            ls -ltr
-            apt install nodejs -y
-            apt install npm -y
-            nodejs -v
-            npm -v
+            ls -ltra
       - attach_workspace:
           at: /tmp
       - run:
