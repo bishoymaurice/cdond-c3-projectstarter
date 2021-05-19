@@ -47,12 +47,9 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          paths: [frontend]
           key: frontend-build
-      - persist_to_workspace:
-          root: .
           paths:
-            - ./frontend/dist
+            - frontend
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -75,12 +72,9 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          paths: [backend]
           key: backend-build
-      - persist_to_workspace:
-          root: .
           paths:
-            - ./frontend/dist
+            - backend
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -107,8 +101,9 @@ jobs:
             # npm test
             echo "Pass Simulation"
       - save_cache:
-          paths: [frontend]
           key: frontend-build
+          paths:
+            - frontend
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -132,8 +127,9 @@ jobs:
             # npm test
             echo "Pass Simulation"
       - save_cache:
-          paths: [backend]
           key: backend-build
+          paths:
+            - backend
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -153,8 +149,9 @@ jobs:
             # npm audit --audit-level=critical
             echo "Pass Simulation"
       - save_cache:
-          paths: [frontend]
           key: frontend-build
+          paths:
+            - frontend
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -174,8 +171,9 @@ jobs:
             # npm audit --audit-level=critical
             echo "Pass Simulation"
       - save_cache:
-          paths: [backend]
           key: backend-build
+          paths:
+            - backend
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -335,7 +333,7 @@ jobs:
       - run:
           name: Deploy frontend objects
           command: |
-            cd /tmp/frontend/dist
+            cd frontend/dist
             pwd
             ls -ltra
             aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --delete
