@@ -331,12 +331,12 @@ jobs:
           command: |
             pwd  
             ls -ltra
-            cd frontend
+            cd /home/circleci/project/frontend
             ls -ltra
             cd dist
             ls -ltra
             pwd
-            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --delete
+            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID}/
       - slack/notify:
           event: fail
           template: basic_fail_1
