@@ -329,9 +329,13 @@ jobs:
       - run:
           name: Deploy frontend objects
           command: |
-            cd frontend/dist
-            pwd
+            pwd  
             ls -ltra
+            cd frontend
+            ls -ltra
+            cd dist
+            ls -ltra
+            pwd
             aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --delete
       - slack/notify:
           event: fail
