@@ -11,7 +11,7 @@ commands:
           when: on_fail
           command: |
             # Delete files uploaded to S3
-            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --recursive || echo "Bucket not found"
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive || echo "Bucket not found"
             # Remove backend stack
             aws cloudformation delete-stack --stack-name UDA-PEOPLE-BACKEND-${CIRCLE_WORKFLOW_ID:0:7} || echo "Not found"
             # Remove frontend stack
@@ -25,7 +25,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            export ifMigrationRan=$(curl -s -o /dev/null "%{body}" -H "token: 4451b76e-6c0c-4282-8c72-1e80ae2306db" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID})
+            export ifMigrationRan=$(curl -s -o /dev/null "%{body}" -H "token: 4451b76e-6c0c-4282-8c72-1e80ae2306db" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if [ $ifMigrationRan == 1 ]
             then
               cd backend
@@ -289,9 +289,9 @@ jobs:
           name: Send migration results to memstash
           command: |
             if grep -q "has been executed successfully" migrations_log.txt; then
-              curl -H "Content-Type: text/plain" -H "token: 4451b76e-6c0c-4282-8c72-1e80ae2306db" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+              curl -H "Content-Type: text/plain" -H "token: 4451b76e-6c0c-4282-8c72-1e80ae2306db" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             else
-              curl -H "Content-Type: text/plain" -H "token: 4451b76e-6c0c-4282-8c72-1e80ae2306db" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+              curl -H "Content-Type: text/plain" -H "token: 4451b76e-6c0c-4282-8c72-1e80ae2306db" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
       - slack/notify:
           event: fail
@@ -340,7 +340,7 @@ jobs:
             cd dist
             ls -ltra
             pwd
-            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID}/
+            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -408,7 +408,7 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
-            export FrontendURL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-eu-west-2.amazonaws.com"
+            export FrontendURL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-west-2.amazonaws.com"
       - run:
           name: Rollback in case of failure
           command: |
