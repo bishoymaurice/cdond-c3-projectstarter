@@ -47,7 +47,7 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [frontend]
           key: frontend-build
       - slack/notify:
           event: fail
@@ -71,7 +71,7 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          paths: [backend/node_modules]
+          paths: [backend]
           key: backend-build
       - slack/notify:
           event: fail
@@ -99,7 +99,7 @@ jobs:
             # npm test
             echo "Pass Simulation"
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [frontend]
           key: frontend-build
       - slack/notify:
           event: fail
@@ -124,7 +124,7 @@ jobs:
             # npm test
             echo "Pass Simulation"
       - save_cache:
-          paths: [backend/node_modules]
+          paths: [backend]
           key: backend-build
       - slack/notify:
           event: fail
@@ -145,7 +145,7 @@ jobs:
             # npm audit --audit-level=critical
             echo "Pass Simulation"
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [frontend]
           key: frontend-build
       - slack/notify:
           event: fail
@@ -166,7 +166,7 @@ jobs:
             # npm audit --audit-level=critical
             echo "Pass Simulation"
       - save_cache:
-          paths: [backend/node_modules]
+          paths: [backend]
           key: backend-build
       - slack/notify:
           event: fail
@@ -364,7 +364,7 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            ansible-playbook -i /tmp/.circleci/ansible/inventory.txt deploy-backend.yml
+            ansible-playbook -i /tmp/.circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
       - slack/notify:
           event: fail
           template: basic_fail_1
