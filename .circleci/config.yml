@@ -363,7 +363,7 @@ jobs:
             apt install software-properties-common -y
             apt-add-repository ppa:ansible/ansible -y
             apt update -y
-            apt install zip gzip tar curl ansible -y
+            apt install zip gzip tar curl ansible rsync grsync -y
             pwd
             ls -ltra
             sed -i 's/^\[defaults\]/\[defaults\]\nhost_key_checking = False/g' /etc/ansible/ansible.cfg
