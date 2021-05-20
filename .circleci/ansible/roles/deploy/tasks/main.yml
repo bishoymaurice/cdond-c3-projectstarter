@@ -3,3 +3,6 @@
   synchronize:
     src: "../../backend/demo"
     dest: "~/web"
+- name: Executing node
+  shell: |
+    pm2 start ~/web/index.js -f || echo "index.js not here yet"
