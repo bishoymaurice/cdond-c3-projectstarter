@@ -439,10 +439,10 @@ jobs:
           name: Update cloudfront distribution
           command: |
             aws cloudformation update-stack \
-            --template-file .circleci/files/cloudfront.yml \
-            --tags UdaPeople=UdaPeopleFrontend \
-            --stack-name UDA-PEOPLE-FRONTEND-${CIRCLE_WORKFLOW_ID:0:7} \
-            --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
+              --template-file .circleci/files/cloudfront.yml \
+              --tags UdaPeople=UdaPeopleFrontend \
+              --stack-name UDA-PEOPLE-FRONTEND-${CIRCLE_WORKFLOW_ID:0:7} \
+              --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
       - slack/notify:
           event: fail
           template: basic_fail_1

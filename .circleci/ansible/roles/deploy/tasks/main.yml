@@ -1,5 +1,5 @@
 ---
 - name: Copy backend files
   synchronize:
-    src: "/home/circleci/project/backend/"
+    src: "/home/circleci/project/backend/demo/"
     dest: "~/web/"

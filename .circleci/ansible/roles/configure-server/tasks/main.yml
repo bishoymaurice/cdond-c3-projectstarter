@@ -29,18 +29,6 @@
     production: yes
     state: present
 
-# - name: Set environment variables
-#   environment:
-#     PATH: "$JAVA_HOME/bin:{{ ansible_env.PATH }}"
-#     ENVIRONMENT: production
-#     TYPEORM_CONNECTION: postgres
-#     TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
-#     TYPEORM_HOST: database-1.cbvz1xaekbmr.us-east-2.rds.amazonaws.com
-#     TYPEORM_PORT: 5432
-#     TYPEORM_USERNAME: postgres
-#     TYPEORM_PASSWORD: postgres
-#     TYPEORM_DATABASE: database-1
-
 - name: Creates directory
   file:
     path: ~/web
@@ -48,4 +36,14 @@
 
 - name: Executing node
   shell: |
-    pm2 start ~/web/main.js -f || echo "main.js not found"
+    pm2 start ~/web/index.js -f || echo "index.js not here yet"
+  environment:
+    PATH: "$JAVA_HOME/bin:{{ ansible_env.PATH }}"
+    ENVIRONMENT: production
+    TYPEORM_CONNECTION: postgres
+    TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
+    TYPEORM_HOST: 34.209.77.224
+    TYPEORM_PORT: 5432
+    TYPEORM_USERNAME: postgres
+    TYPEORM_PASSWORD: postgres
+    TYPEORM_DATABASE: postgres
