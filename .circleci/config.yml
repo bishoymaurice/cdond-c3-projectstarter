@@ -393,11 +393,11 @@ jobs:
           command: |
             apk add curl
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: /tmp
       - run:
           name: Get backend url
           command: |
-            sed -n '2p' .circleci/ansible/inventory.txt > .circleci/ansible/backendip.txt
+            sed -n '2p' /tmp/.circleci/ansible/inventory.txt > .circleci/ansible/backendip.txt
             export BACKEND_IP=$(cat .circleci/ansible/backendip.txt)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
