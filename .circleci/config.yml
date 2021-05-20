@@ -364,6 +364,9 @@ jobs:
             apt-add-repository ppa:ansible/ansible -y
             apt update -y
             apt install zip gzip tar curl ansible rsync grsync -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
             pwd
             ls -ltra
             sed -i 's/^\[defaults\]/\[defaults\]\nhost_key_checking = False/g' /etc/ansible/ansible.cfg
@@ -385,13 +388,25 @@ jobs:
 
   smoke-test:
     docker:
-      - image: alpine:3.13.5
+      - image: ubuntu
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            apk add curl
+            apt update
+            export DEBIAN_FRONTEND=noninteractive
+            apt install software-properties-common -y
+            apt-add-repository ppa:ansible/ansible -y
+            apt update -y
+            apt install zip gzip tar curl ansible rsync grsync -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+            pwd
+            ls -ltra
+            sed -i 's/^\[defaults\]/\[defaults\]\nhost_key_checking = False/g' /etc/ansible/ansible.cfg
+            tail /etc/ansible/ansible.cfg
       - attach_workspace:
           at: /tmp
       - run:
@@ -432,9 +447,25 @@ jobs:
 
   cloudfront-update:
     docker:
-      - image: amazon/aws-cli
+      - image: ubuntu
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apt update
+            export DEBIAN_FRONTEND=noninteractive
+            apt install software-properties-common -y
+            apt-add-repository ppa:ansible/ansible -y
+            apt update -y
+            apt install zip gzip tar curl ansible rsync grsync -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+            pwd
+            ls -ltra
+            sed -i 's/^\[defaults\]/\[defaults\]\nhost_key_checking = False/g' /etc/ansible/ansible.cfg
+            tail /etc/ansible/ansible.cfg
       - run:
           name: Update cloudfront distribution
           command: |
@@ -452,7 +483,25 @@ jobs:
 
   cleanup:
     docker:
-      - image: amazon/aws-cli
+      - image: ubuntu
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apt update
+            export DEBIAN_FRONTEND=noninteractive
+            apt install software-properties-common -y
+            apt-add-repository ppa:ansible/ansible -y
+            apt update -y
+            apt install zip gzip tar curl ansible rsync grsync -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+            pwd
+            ls -ltra
+            sed -i 's/^\[defaults\]/\[defaults\]\nhost_key_checking = False/g' /etc/ansible/ansible.cfg
+            tail /etc/ansible/ansible.cfg
     steps:
       - run:
           name: Get old stack workflow id
