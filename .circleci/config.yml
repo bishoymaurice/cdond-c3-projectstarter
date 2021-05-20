@@ -502,7 +502,6 @@ jobs:
             ls -ltra
             sed -i 's/^\[defaults\]/\[defaults\]\nhost_key_checking = False/g' /etc/ansible/ansible.cfg
             tail /etc/ansible/ansible.cfg
-    steps:
       - run:
           name: Get old stack workflow id
           command: |
