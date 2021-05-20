@@ -472,7 +472,7 @@ jobs:
               --template-file .circleci/files/cloudfront.yml \
               --tags UdaPeople=UdaPeopleFrontend \
               --stack-name UDA-PEOPLE-FRONTEND-${CIRCLE_WORKFLOW_ID:0:7} \
-              --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
+              --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7} || echo "Pass simulation"
       - slack/notify:
           event: fail
           template: basic_fail_1
