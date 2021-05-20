@@ -413,27 +413,24 @@ jobs:
           name: Get backend url
           command: |
             sed -n '2p' /tmp/.circleci/ansible/inventory.txt > .circleci/ansible/backendip.txt
-            export BACKEND_IP=$(cat .circleci/ansible/backendip.txt)
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            more .circleci/ansible/backendip.txt
       - run:
           name: Backend smoke test.
           command: |
-            export BackendTestHttpCode=$(curl -s -o /dev/null -w "%{http_code}" ${API_URL})
+            export BACKEND_IP=$(cat .circleci/ansible/backendip.txt)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo $API_URL
+            export BackendTestHttpCode=$(curl -s -o /dev/null -w "%{http_code}" $API_URL)
+            echo "BackendTestHttpCode is $BackendTestHttpCode"
+            if [ $BackendTestHttpCode != 200 ]
+            then
+              echo "Backend smoke test failed";
+              exit 1;
+            fi
       - run:
           name: Frontend smoke test.
           command: |
             export FrontendURL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-west-2.amazonaws.com"
-      - run:
-          name: Rollback in case of failure
-          command: |
-            # Backend
-            if [ $BackendTestHttpCode != 200 ]
-            then
-              echo "Backend smoke test failed"
-              exit 1;
-            fi
-            # Frontend
             if curl -s ${FrontendURL} | grep "Welcome"
             then
               exit 1;
