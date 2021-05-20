@@ -1,5 +1,5 @@
 ---
 - name: Copy backend files
   synchronize:
-    src: "./backend/demo"
+    src: "../../backend/demo"
     dest: "~/web"
