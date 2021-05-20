@@ -1,4 +1,5 @@
+---
 - name: Copy backend files
-  ansible.builtin.copy:
+  synchronize:
     src: "/home/circleci/project/backend/dist/"
     dest: "~/web/"
