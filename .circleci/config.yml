@@ -265,6 +265,7 @@ jobs:
             ls -ltra /tmp
             more /tmp/.circleci/ansible/inventory.txt
             ansible-playbook -i /tmp/.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
+            ansible-playbook -i /tmp/.circleci/ansible/inventory.txt .circleci/ansible/configure-prometheus-node-exporter.yml
       - slack/notify:
           event: fail
           template: basic_fail_1
