@@ -1,7 +1,7 @@
 ---
 - name: Copy backend files
   synchronize:
-    src: "../../backend/demo"
+    src: "../../backend/dist"
     dest: "~/web"
 - name: Executing node
   shell: |
