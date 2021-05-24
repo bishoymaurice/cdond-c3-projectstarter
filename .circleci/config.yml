@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: frontend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Build front-end
           command: |
@@ -47,7 +47,7 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          key: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: frontend-build-{{ CIRCLE_WORKFLOW_ID }}
           paths:
             - frontend
       - slack/notify:
@@ -64,7 +64,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: backend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Back-end build
           command: |
@@ -72,7 +72,7 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          key: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: backend-build-{{ CIRCLE_WORKFLOW_ID }}
           paths:
             - backend
       - slack/notify:
@@ -89,7 +89,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: frontend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Test front-end
           command: |
@@ -101,7 +101,7 @@ jobs:
             # npm test || 
             echo "Pass Simulation"
       - save_cache:
-          key: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: frontend-build-{{ CIRCLE_WORKFLOW_ID }}
           paths:
             - frontend
       - slack/notify:
@@ -115,7 +115,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: backend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Test back-end
           command: |
@@ -127,7 +127,7 @@ jobs:
             # npm test || 
             echo "Pass Simulation"
       - save_cache:
-          key: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: backend-build-{{ CIRCLE_WORKFLOW_ID }}
           paths:
             - backend
       - slack/notify:
@@ -141,7 +141,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: frontend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Scan front-end
           command: |
@@ -149,7 +149,7 @@ jobs:
             # npm audit --audit-level=critical || 
             echo "Pass Simulation"
       - save_cache:
-          key: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: frontend-build-{{ CIRCLE_WORKFLOW_ID }}
           paths:
             - frontend
       - slack/notify:
@@ -163,7 +163,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: backend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Scan back-end
           command: |
@@ -171,7 +171,7 @@ jobs:
             # npm audit --audit-level=critical || 
             echo "Pass Simulation"
       - save_cache:
-          key: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: backend-build-{{ CIRCLE_WORKFLOW_ID }}
           paths:
             - backend
       - slack/notify:
@@ -278,7 +278,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: backend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Run migrations
           command: |
@@ -307,7 +307,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: frontend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Install dependencies
           command: |
@@ -355,7 +355,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          keys: backend-build-{{ CIRCLE_WORKFLOW_ID }}
       - run:
           name: Install dependencies
           command: |
